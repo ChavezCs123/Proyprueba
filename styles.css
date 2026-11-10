@@ -1,0 +1,411 @@
+/* ==========================================================
+   styles.css
+   Estilos de la página de login.
+   Organización:
+   1. Variables (paleta y medidas)   2. Base
+   3. Tarjeta y panel lateral        4. Formulario
+   5. Botones y estados              6. Responsivo
+   7. Accesibilidad (movimiento reducido)
+   ========================================================== */
+
+/* ---------- 1. VARIABLES ----------
+   Guardar colores en variables permite cambiar toda la paleta desde un solo lugar. */
+:root {
+  --navy-900: #071a33;   /* fondo de la página */
+  --navy-800: #0b2545;   /* azul oscuro principal (texto y botón) */
+  --navy-700: #13315c;   /* azul intermedio */
+  --teal-400: #2dd4bf;   /* turquesa brillante (acentos sobre fondo oscuro) */
+  --teal-600: #0d9488;   /* turquesa medio (bordes en foco) */
+  --teal-700: #0f766e;   /* turquesa oscuro (texto/enlaces sobre blanco: buen contraste) */
+  --white: #ffffff;
+  --surface: #f4f8fb;    /* fondo de los campos */
+  --line: #cfd9e5;       /* bordes */
+  --muted: #4a5b73;      /* texto secundario */
+  --danger: #b42318;     /* errores */
+  --danger-bg: #fdecea;
+  --ok-bg: #e3f6f3;
+
+  --radius: 14px;
+  --shadow: 0 24px 60px rgba(3, 12, 28, 0.45);
+  --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------- 2. BASE ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;   /* el padding no aumenta el ancho total de los elementos */
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--navy-800);
+  line-height: 1.5;
+  /* Fondo azul oscuro con un resplandor turquesa suave */
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(45, 212, 191, 0.22), transparent 60%),
+    radial-gradient(700px 500px at -10% 110%, rgba(19, 49, 92, 0.9), transparent 60%),
+    var(--navy-900);
+}
+
+/* Contenedor que centra la tarjeta (Flexbox) */
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Enlace "saltar al formulario": invisible hasta recibir el foco con Tab */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  background: var(--white);
+  color: var(--navy-800);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  z-index: 10;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+/* ---------- 3. TARJETA Y PANEL LATERAL ---------- */
+.card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: grid;                 /* CSS Grid: una columna en móvil */
+  grid-template-columns: 1fr;
+}
+
+.card__aside {
+  display: none;                 /* oculto en móvil; se muestra en pantallas anchas */
+}
+
+.card__body {
+  padding: 36px 32px 28px;
+}
+
+.card__header h1 {
+  margin: 0 0 6px;
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+}
+
+.card__subtitle {
+  margin: 0 0 26px;
+  color: var(--muted);
+}
+
+/* Panel lateral (solo escritorio) */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--teal-400);
+}
+.brand__name {
+  color: var(--white);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+.aside__text {
+  margin: 36px 0 24px;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.aside__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  color: #cfe3f1;
+  font-size: 0.95rem;
+}
+.aside__list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+/* Pequeña marca turquesa antes de cada elemento de la lista */
+.aside__list li::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal-400);
+  flex: none;
+}
+
+/* ---------- 4. FORMULARIO ---------- */
+.field {
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Caja que agrupa icono + input + botón de ojo.
+   Los estilos de foco se aplican a la caja completa con :focus-within */
+.field__box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.field__box:hover {
+  border-color: #9fb3c8;
+}
+
+/* Indicador visual cuando el campo recibe el foco */
+.field__box:focus-within {
+  background: var(--white);
+  border-color: var(--teal-600);
+  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.22);
+}
+
+.field__icon {
+  flex: none;
+  color: var(--teal-700);
+}
+
+.field__box input {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: var(--navy-800);
+  outline: none;             /* el foco ya se muestra en .field__box */
+}
+
+.field__box input::placeholder {
+  color: #6b7c93;
+}
+
+/* Estado de error: el borde cambia a rojo (se activa con aria-invalid desde JS) */
+.field__box:has(input[aria-invalid="true"]) {
+  border-color: var(--danger);
+  background: var(--danger-bg);
+}
+.field__box:has(input[aria-invalid="true"]):focus-within {
+  box-shadow: 0 0 0 4px rgba(180, 35, 24, 0.18);
+}
+
+/* Mensaje de error bajo cada campo */
+.field__error {
+  margin: 6px 2px 0;
+  min-height: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--danger);
+}
+.field__error:empty {
+  display: none;
+}
+
+/* Botón mostrar/ocultar contraseña */
+.toggle {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.toggle:hover {
+  background: rgba(13, 148, 136, 0.12);
+  color: var(--teal-700);
+}
+
+/* Fila: casilla + enlace */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin: 4px 0 22px;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-weight: 500;
+  cursor: pointer;
+}
+.check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--teal-700);   /* colorea la casilla nativa */
+  cursor: pointer;
+}
+
+.link {
+  color: var(--teal-700);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+}
+.link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- 5. BOTONES Y ESTADOS ---------- */
+.btn {
+  width: 100%;
+  padding: 14px 18px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--navy-800);
+  color: var(--white);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(11, 37, 69, 0.25);
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+/* Efecto al pasar el cursor: cambia a turquesa y se eleva ligeramente */
+.btn:hover {
+  background: var(--teal-700);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(15, 118, 110, 0.35);
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+  transform: none;
+}
+
+/* Foco visible para quien navega con teclado */
+:focus-visible {
+  outline: 3px solid var(--teal-600);
+  outline-offset: 3px;
+}
+.field__box input:focus-visible {
+  outline: none;   /* la caja ya muestra el anillo de foco */
+}
+
+/* Mensaje de estado (confirmación / bienvenida / error) */
+.status {
+  margin-top: 16px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.status:empty {
+  display: none;
+}
+.status--info,
+.status--success,
+.status--error {
+  padding: 12px 14px;
+}
+.status--info {
+  background: #e8eff7;
+  color: var(--navy-700);
+}
+.status--success {
+  background: var(--ok-bg);
+  color: #0a5a54;
+  border: 1px solid #9ad9d0;
+}
+.status--error {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid #f3b8b2;
+}
+
+.demo-hint {
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+.demo-hint code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--navy-800);
+  font-family: Consolas, "Courier New", monospace;
+}
+
+/* ---------- 6. DISEÑO RESPONSIVO ---------- */
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+  .page {
+    padding: 12px;
+  }
+  .card__body {
+    padding: 28px 20px 22px;
+  }
+  .row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Tabletas y escritorio: tarjeta de dos columnas */
+@media (min-width: 860px) {
+  .card {
+    max-width: 920px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .card__aside {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px 44px;
+    color: var(--white);
+    background:
+      radial-gradient(400px 300px at 100% 0%, rgba(45, 212, 191, 0.3), transparent 70%),
+      linear-gradient(160deg, var(--navy-700), var(--navy-800) 70%);
+  }
+  .card__body {
+    padding: 52px 48px 36px;
+  }
+}
+
+/* ---------- 7. ACCESIBILIDAD: MOVIMIENTO REDUCIDO ----------
+   Si la persona pidió menos animaciones en su sistema, las desactivamos. */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
